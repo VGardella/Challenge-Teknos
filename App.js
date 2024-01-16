@@ -13,8 +13,9 @@ app.listen(PORT, () => {
 
 // Obtención de carpetas:
 
-app.get('/folders', (req, res) => {
-    fs.readFile('Modelos/folders.json', function(err, data) {
+app.get('/:name', (req, res) => {
+    let file = req.params.name;
+    fs.readFile('Modelos/' + file + '.json', function(err, data) {
         res.writeHead(200, {'Content-Type': 'text/html'});
         res.write(data);
         return res.end();
