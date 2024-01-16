@@ -7,9 +7,16 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
-app.listen(PORT, (req, res) => {
+app.listen(PORT, () => {
     console.log('Escuchando puerto:', PORT);
 })
 
 // Obtención de carpetas:
 
+app.get('/folders', (req, res) => {
+    fs.readFile('Modelos/folders.json', function(err, data) {
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write(data);
+        return res.end();
+    })
+})
