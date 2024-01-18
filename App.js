@@ -16,7 +16,7 @@ app.listen(PORT, () => {
 app.get('/api/:name', (req, res) => {
     let file = req.params.name;
     fs.readFile('Modelos/' + file + '.json', function(err, data) {
-        const newData = JSON.parse(data);
+        const newData = JSON.parse(data); // Se tiene que parsear porque los archivos tienen JSON strings y tengo que convertirlos al objeto correspondiente.
         res.send(newData.data);
     })
 })
@@ -40,16 +40,16 @@ app.get('/api/messages/:name', (req, res) => {
         }
 
         let mailList = JSON.parse(data);
-        let messages =  Object.entries(mailList.data);
+        let messages =  mailList.data;
 
         let filteredMess = []
 
         messages.forEach((message) => {
 
             let temp = {
-                'from': Object.entries(message[1]['from']),
-                'to': Object.entries(message[1]['to'][0]),
-                'subject': message[1]['subject']
+                'from': Object.entries(message['from']),
+                'to': Object.entries(message['to'][0]),
+                'subject': message['subject']
             }
             
             let approvedMess = true;
