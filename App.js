@@ -16,9 +16,7 @@ app.listen(PORT, () => {
 app.get('/:name', (req, res) => {
     let file = req.params.name;
     fs.readFile('Modelos/' + file + '.json', function(err, data) {
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        // res.write(data);
-        // return res.end();
+        res.send(data);
     })
 })
 
@@ -44,29 +42,32 @@ app.get('/messages/:name', (req, res) => {
         let messages =  Object.entries(mailList.data);
 
         let filteredMess = []
-        
+
         messages.forEach((message) => {
-            if (filters['from'] !== '') {
-                for (let sender in message[1]['from']) {
-                    if (message[1]['from'][sender].includes(filters['from'])) {
-                        filteredMess.push(message);
-                }}
+            let temp = {
+                'from': Object.entries(message[1]['from']),
+                'to': Object.entries(message[1]['to'][0]),
+                'subject': message[1]['subject']
             }
-            if (filters['to'] !== '') {
-                for (let recipient in message[1]['to'][0]) {
-                    if (message[1]['to'][0][recipient].includes(filters['to'])) {
-                        filteredMess.push(message);
-                    }
+            
+            let approvedMess = true;
+
+            for (let filter in filters) {
+                if (filters[filter] !== '' && !JSON.stringify(temp[filter]).includes(filters[filter])) {
+                    approvedMess = false;
+                    break;
                 }
             }
-            if (filters['subject'] !== '') {
-                if (message[1]['subject'].includes(filters['subject'])) {
-                    filteredMess.push(message);
-                }
+
+            if (approvedMess && !filteredMess.includes(message)) {
+                filteredMess.push(message);
             }
+
+            console.log(approvedMess);
         })
 
         res.send(filteredMess);
+
 
     })
 })
