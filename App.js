@@ -16,7 +16,8 @@ app.listen(PORT, () => {
 app.get('/api/:name', (req, res) => {
     let file = req.params.name;
     fs.readFile('Modelos/' + file + '.json', function(err, data) {
-        res.send(data);
+        const newData = JSON.parse(data);
+        res.send(newData.data);
     })
 })
 
