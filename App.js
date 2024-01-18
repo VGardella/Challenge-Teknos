@@ -13,7 +13,7 @@ app.listen(PORT, () => {
 
 // Lectura de archivos:
 
-app.get('/:name', (req, res) => {
+app.get('/api/:name', (req, res) => {
     let file = req.params.name;
     fs.readFile('Modelos/' + file + '.json', function(err, data) {
         res.send(data);
@@ -22,7 +22,7 @@ app.get('/:name', (req, res) => {
 
 // Obtener mensajes:
 
-app.get('/messages/:name', (req, res) => {
+app.get('/api/messages/:name', (req, res) => {
     let file = req.params.name;
     fs.readFile('Modelos/' + file + '.json', function(err, data) {
         let filters = { 'from': '',
@@ -55,7 +55,7 @@ app.get('/messages/:name', (req, res) => {
             for (let filter in filters) {
                 if (filters[filter] !== '' && !JSON.stringify(temp[filter]).includes(filters[filter])) {
                     approvedMess = false;
-                    break;
+                    break; // este break afecta al loop mas cercano (el for), dado que un if no es un bucle
                 }
             }
 
@@ -63,11 +63,8 @@ app.get('/messages/:name', (req, res) => {
                 filteredMess.push(message);
             }
 
-            console.log(approvedMess);
         })
 
         res.send(filteredMess);
-
-
     })
 })
