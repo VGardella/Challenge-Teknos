@@ -44,6 +44,7 @@ app.get('/api/messages/:name', (req, res) => {
         let filteredMess = []
 
         messages.forEach((message) => {
+
             let temp = {
                 'from': Object.entries(message[1]['from']),
                 'to': Object.entries(message[1]['to'][0]),
@@ -66,5 +67,25 @@ app.get('/api/messages/:name', (req, res) => {
         })
 
         res.send(filteredMess);
+    })
+})
+
+// Crear mensajes:
+
+app.post('/api/messages/:name', (req, res) => {
+    const file = req.params.name;
+    const route = 'Modelos/' + file + '.json'
+    const recivedData = req.body;
+
+    fs.readFile(route, (err, data) => {
+        const entries = JSON.parse(data).data;
+        entries.push(recivedData);
+
+        fs.writeFile(route, JSON.stringify({ data: entries }, null, 2), (err) => {
+            if (err) {
+                console.log(err);
+            }
+            res.send('Message saved!')
+        })
     })
 })
