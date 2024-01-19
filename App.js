@@ -15,7 +15,7 @@ app.get('/api/:name', (req, res) => {
     let file = req.params.name;
     fs.readFile('Modelos/' + file + '.json', function(err, data) {
         if (err) {
-            return res.send('Error: ', err);
+            return res.send('Error al abrir el archivo: nombre equivocado.');
         }
         
         const newData = JSON.parse(data);
@@ -27,64 +27,70 @@ app.get('/api/:name', (req, res) => {
 // Obtener mensajes:
 
 app.get('/api/messages/:name', (req, res) => {
+    
     let file = req.params.name;
-    fs.readFile('Modelos/' + file + '.json', function(err, data) {
-
-        if (err) {
-            return res.send('Error: ', err);
-        }
-
-        let filters = { 
-                        'from': '',
-                        'to': '',
-                        'subject': ''
-                    };
-
-        let values = req.query;
-
-        for (const key in filters) {
-            if (key in values) {
-                filters[key] = values[key];
-            }
-        }
-
-        let mailList = JSON.parse(data);
-        let messages =  mailList.data;
-
-        let filteredMess = []
-
-        messages.forEach((message) => {
-            let temp = null;
-
-            try {
-                temp = {
-                    'from': message['from'],
-                    'to': message['to'][0],
-                    'subject': message['subject']
-                }
-            }
-            catch (error) {
-                res.send('El objeto no tiene alguno de los campos necesarios.');
-                return;
-            }
-            
-            let approvedMess = true;
-
-            for (let filter in filters) {
-                if (filters[filter] !== '' && !JSON.stringify(temp[filter]).toLowerCase().includes(filters[filter].toLowerCase())) {
-                    approvedMess = false;
-                    break; // este break afecta al loop mas cercano (el for), dado que un if no es un bucle
-                }
+    if (Object.keys(req.query).length === 0) {
+        fs.readFile('Modelos/' + file + '.json', function(err, data) {
+            if (err) {
+                return res.send('Error al abrir el archivo: nombre equivocado.');
             }
 
-            if (approvedMess && !filteredMess.includes(message)) {
-                filteredMess.push(message);
-            }
-
+            const newData = JSON.parse(data);
+            res.send(newData.data);
         })
-
-        res.send(filteredMess);
-    })
+    } else {
+        fs.readFile('Modelos/' + file + '.json', function(err, data) {
+            if (err) {
+                return res.send('Error al abrir el archivo: nombre equivocado.');
+            }
+    
+            let filters = { 
+                            'from': '',
+                            'to': '',
+                            'subject': ''
+                        };
+    
+            let values = req.query;
+    
+            for (const key in filters) {
+                if (key in values) {
+                    filters[key] = values[key];
+                }
+            }
+    
+            let mailList = JSON.parse(data);
+            let messages =  mailList.data;
+    
+            let response = []
+    
+            messages.forEach((message) => {
+                if (!message['from'] || !message['to'][0] || !message['subject']) {
+                    response = 'Error: uno o más mensajes tienen un formato equivocado.';
+                } else {
+                    let temp = {
+                        'from': message['from'],
+                        'to': message['to'][0],
+                        'subject': message['subject']
+                    }
+                    
+                    let approvedMess = true;
+        
+                    for (let filter in filters) {
+                        if (filters[filter] !== '' && !JSON.stringify(temp[filter]).toLowerCase().includes(filters[filter].toLowerCase())) {
+                            approvedMess = false;
+                            break;
+                        }
+                    }
+        
+                    if (approvedMess && !response.includes(message)) {
+                        response.push(message);
+                    }
+                }
+            })
+    
+            res.send(response);
+        })
+    }
 })
 
 // Crear mensajes:
@@ -95,9 +101,8 @@ app.post('/api/messages/:name', (req, res) => {
     const recivedData = req.body;
 
     fs.readFile(route, (err, data) => {
-
         if (err) {
-            return res.send('Error: ', err);
+            return res.send('Error al abrir el archivo: nombre equivocado.');
         }
 
         const entries = JSON.parse(data).data;
@@ -105,10 +110,10 @@ app.post('/api/messages/:name', (req, res) => {
 
         fs.writeFile(route, JSON.stringify({ data: entries }, null, 2), (err) => {
             if (err) {
-                console.log('Error: ', err);
+                console.log('Error al reescribir el archivo.');
             }
 
-            res.send('Message saved!')
+            res.send('Mensaje guardado.')
         })
     })
 })
@@ -122,7 +127,7 @@ app.delete('/api/messages/:name/:id', (req, res) => {
 
     fs.readFile(route, (err, data) => {
         if (err) {
-            return res.send('Error: ', err)
+            return res.send('Error al abrir el archivo: nombre equivocado.')
         }
 
         let messages = JSON.parse(data).data;
@@ -133,10 +138,10 @@ app.delete('/api/messages/:name/:id', (req, res) => {
 
         fs.writeFile(route, JSON.stringify({ data: newList }, null, 2), (err) => {
             if (err) {
-                res.send('Error: ', err);
+                res.send('Error al reescribir el archivo.');
             }
 
-            res.send('Message deleted!')
+            res.send('Mensaje borrado.')
         })
     })
 })
