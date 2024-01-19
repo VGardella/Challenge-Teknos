@@ -15,7 +15,7 @@ app.get('/:user/api/:name', (req, res) => {
     if (req.params.user !== 'teknos') {
         res.send('Usuario equivocado.')
     } else {
-        let file = req.params.name;
+        const file = req.params.name;
         fs.readFile('Modelos/' + file + '.json', function(err, data) {
             if (err) {
                 return res.send('Error al abrir el archivo: nombre equivocado.');
@@ -34,7 +34,7 @@ app.get('/:user/api/messages/:name', (req, res) => {
     if (req.params.user !== 'teknos') {
         res.send('Usuario equivocado.')
     } else {
-        let file = req.params.name;
+        const file = req.params.name;
         if (Object.keys(req.query).length === 0) {
             fs.readFile('Modelos/' + file + '.json', function(err, data) {
                 if (err) {
@@ -56,7 +56,7 @@ app.get('/:user/api/messages/:name', (req, res) => {
                                 'subject': ''
                             };
         
-                let values = req.query;
+                const values = req.query;
         
                 for (const key in filters) {
                     if (key in values) {
@@ -64,8 +64,8 @@ app.get('/:user/api/messages/:name', (req, res) => {
                     }
                 }
         
-                let mailList = JSON.parse(data);
-                let messages =  mailList.data;
+                const mailList = JSON.parse(data);
+                const messages =  mailList.data;
         
                 let response = []
         
@@ -73,7 +73,7 @@ app.get('/:user/api/messages/:name', (req, res) => {
                     if (!message['from'] || !message['to'][0] || !message['subject']) {
                         response = 'Error: uno o más mensajes tienen un formato equivocado.';
                     } else {
-                        let temp = {
+                        const temp = {
                             'from': message['from'],
                             'to': message['to'][0],
                             'subject': message['subject']
@@ -144,9 +144,9 @@ app.delete('/:user/api/messages/:name/:id', (req, res) => {
                 return res.send('Error al abrir el archivo: nombre equivocado.')
             }
     
-            let messages = JSON.parse(data).data;
+            const messages = JSON.parse(data).data;
             
-            let newList = messages.filter((message) => 
+            const newList = messages.filter((message) => 
                 message.id !== targetId
             )
     
