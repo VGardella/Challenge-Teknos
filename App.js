@@ -16,8 +16,13 @@ app.listen(PORT, () => {
 app.get('/api/:name', (req, res) => {
     let file = req.params.name;
     fs.readFile('Modelos/' + file + '.json', function(err, data) {
+        if (err) {
+            return res.send('Error: ', err);
+        }
+        
         const newData = JSON.parse(data); // Se tiene que parsear porque los archivos tienen JSON strings y tengo que convertirlos al objeto correspondiente.
         res.send(newData.data);
+
     })
 })
 
@@ -26,6 +31,11 @@ app.get('/api/:name', (req, res) => {
 app.get('/api/messages/:name', (req, res) => {
     let file = req.params.name;
     fs.readFile('Modelos/' + file + '.json', function(err, data) {
+
+        if (err) {
+            return res.send('Error: ', err);
+        }
+
         let filters = { 'from': '',
                         'to': '',
                         'subject': ''
@@ -45,11 +55,19 @@ app.get('/api/messages/:name', (req, res) => {
         let filteredMess = []
 
         messages.forEach((message) => {
+            let temp = null;
 
-            let temp = {
-                'from': Object.entries(message['from']),
-                'to': Object.entries(message['to'][0]),
-                'subject': message['subject']
+            try {
+                temp = {
+                    'from': message['from'],
+                    'to': message['to'][0],
+                    'subject': message['subject']
+                }
+            }
+
+            catch (error) {
+                res.send('El objeto no tiene alguno de los campos necesarios.');
+                return;
             }
             
             let approvedMess = true;
@@ -79,13 +97,19 @@ app.post('/api/messages/:name', (req, res) => {
     const recivedData = req.body;
 
     fs.readFile(route, (err, data) => {
+
+        if (err) {
+            return res.send('Error: ', err);
+        }
+
         const entries = JSON.parse(data).data;
         entries.push(recivedData);
 
         fs.writeFile(route, JSON.stringify({ data: entries }, null, 2), (err) => { // Lo ponemos como { data: entries } porque sino devuelve un array solo, para procesarlo necesitamos que el objeto sea { data: []}
             if (err) {
-                console.log(err);
+                console.log('Error: ', err);
             }
+
             res.send('Message saved!')
         })
     })
@@ -99,6 +123,10 @@ app.delete('/api/messages/:name/:id', (req, res) => {
     const route = 'Modelos/' + file + '.json';
 
     fs.readFile(route, (err, data) => {
+        if (err) {
+            return res.send('Error: ', err)
+        }
+
         let messages = JSON.parse(data).data;
         
         let newList = messages.filter((message) => 
@@ -107,8 +135,9 @@ app.delete('/api/messages/:name/:id', (req, res) => {
 
         fs.writeFile(route, JSON.stringify({ data: newList }, null, 2), (err) => {
             if (err) {
-                res.send(err);
+                res.send('Error: ', err);
             }
+
             res.send('Message deleted!')
         })
     })
