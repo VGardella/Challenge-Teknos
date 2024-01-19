@@ -71,7 +71,7 @@ app.get('/api/messages/:name', (req, res) => {
             let approvedMess = true;
 
             for (let filter in filters) {
-                if (filters[filter] !== '' && !JSON.stringify(temp[filter]).includes(filters[filter])) {
+                if (filters[filter] !== '' && !JSON.stringify(temp[filter]).toLowerCase().includes(filters[filter].toLowerCase())) {
                     approvedMess = false;
                     break; // este break afecta al loop mas cercano (el for), dado que un if no es un bucle
                 }
