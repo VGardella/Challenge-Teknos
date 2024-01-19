@@ -11,12 +11,11 @@ app.listen(PORT, () => {
 
 // Lectura de archivos:
 
-app.get('/:user/api/:name', (req, res) => {
+app.get('/:user/api/folders', (req, res) => {
     if (req.params.user !== 'teknos') {
         res.send('Usuario equivocado.')
     } else {
-        const file = req.params.name;
-        fs.readFile('Modelos/' + file + '.json', function(err, data) {
+        fs.readFile('Modelos/folders.json', function(err, data) {
             if (err) {
                 return res.send('Error al abrir el archivo: nombre equivocado.');
             }
