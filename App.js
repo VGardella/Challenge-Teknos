@@ -1,7 +1,5 @@
 const express = require('express');
 const fs = require('fs');
-const url = require('url');
-
 
 const app = express();
 const PORT = 3000;
@@ -20,7 +18,7 @@ app.get('/api/:name', (req, res) => {
             return res.send('Error: ', err);
         }
         
-        const newData = JSON.parse(data); // Se tiene que parsear porque los archivos tienen JSON strings y tengo que convertirlos al objeto correspondiente.
+        const newData = JSON.parse(data);
         res.send(newData.data);
 
     })
@@ -36,7 +34,8 @@ app.get('/api/messages/:name', (req, res) => {
             return res.send('Error: ', err);
         }
 
-        let filters = { 'from': '',
+        let filters = { 
+                        'from': '',
                         'to': '',
                         'subject': ''
                     };
@@ -64,7 +63,6 @@ app.get('/api/messages/:name', (req, res) => {
                     'subject': message['subject']
                 }
             }
-
             catch (error) {
                 res.send('El objeto no tiene alguno de los campos necesarios.');
                 return;
@@ -105,7 +103,7 @@ app.post('/api/messages/:name', (req, res) => {
         const entries = JSON.parse(data).data;
         entries.push(recivedData);
 
-        fs.writeFile(route, JSON.stringify({ data: entries }, null, 2), (err) => { // Lo ponemos como { data: entries } porque sino devuelve un array solo, para procesarlo necesitamos que el objeto sea { data: []}
+        fs.writeFile(route, JSON.stringify({ data: entries }, null, 2), (err) => {
             if (err) {
                 console.log('Error: ', err);
             }
