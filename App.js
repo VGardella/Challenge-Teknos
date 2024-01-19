@@ -82,11 +82,34 @@ app.post('/api/messages/:name', (req, res) => {
         const entries = JSON.parse(data).data;
         entries.push(recivedData);
 
-        fs.writeFile(route, JSON.stringify({ data: entries }, null, 2), (err) => {
+        fs.writeFile(route, JSON.stringify({ data: entries }, null, 2), (err) => { // Lo ponemos como { data: entries } porque sino devuelve un array solo, para procesarlo necesitamos que el objeto sea { data: []}
             if (err) {
                 console.log(err);
             }
             res.send('Message saved!')
+        })
+    })
+})
+
+// Borrar mensajes:
+
+app.delete('/api/messages/:name/:id', (req, res) => {
+    const file = req.params.name;
+    const targetId = req.params.id;
+    const route = 'Modelos/' + file + '.json';
+
+    fs.readFile(route, (err, data) => {
+        let messages = JSON.parse(data).data;
+        
+        let newList = messages.filter((message) => 
+            message.id !== targetId
+        )
+
+        fs.writeFile(route, JSON.stringify({ data: newList }, null, 2), (err) => {
+            if (err) {
+                res.send(err);
+            }
+            res.send('Message deleted!')
         })
     })
 })
