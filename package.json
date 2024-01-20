@@ -1,0 +1,22 @@
+{
+  "name": "challenge-teknos",
+  "version": "1.0.0",
+  "description": "<h1>Teknos Backend Challenge</h1>",
+  "main": "App.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VGardella/Challenge-Teknos.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VGardella/Challenge-Teknos/issues"
+  },
+  "homepage": "https://github.com/VGardella/Challenge-Teknos#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
