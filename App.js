@@ -10,8 +10,7 @@ app.listen(PORT, () => {
 })
 
 app.get('/', (req, res) => {
-    res.sendStatus(200);
-    console.log('Todo esta funcionando!');
+    res.status(200).send('Conectado al servidor.');
 })
 
 // Lectura de archivos:
@@ -19,7 +18,7 @@ app.get('/', (req, res) => {
 app.get('/:user/api/folders', (req, res) => {
 
     if (req.params.user !== 'teknos') {
-        res.send('Usuario equivocado.')
+        res.status(404).send()
     } else {
         fs.readFile('Modelos/folders.json', function(err, data) {
             if (err) {
