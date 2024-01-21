@@ -57,6 +57,28 @@ describe('Endpoint', () => {
     })
 })
 
+// Lectura de mensajes:
+
+describe('Endpoint', () => {
+    it('devuelve código de status 200',
+    async () => {
+        const response = await request(app).get('/teknos/api/messages/sent');
+        expect(response.statusCode).toBe(200);
+    })
+
+    it('devuelve código de status 404',
+    async () => {
+        const response = await request(app).get('/:user/api/messages/:name');
+        expect(response.statusCode).toBe(404);
+    })
+
+    it('devuelve código de status 404',
+    async () => {
+        const response = await request(app).get('/api/messages/:name');
+        expect(response.statusCode).toBe(404);
+    })
+})
+
 // Creación de mensajes:
 
 describe('Endpoint', () => {
