@@ -32,3 +32,19 @@ describe('Endpoint', () => {
         expect(response.statusCode).toBe(404);
     })
 })
+
+// Creación de mensajes:
+
+describe('Endpoint', () => {
+    it('retornar código de status 200',
+    async () => {
+        const response = await request(app).post('/teknos/api/messages/sent');
+        expect(response.statusCode).toBe(200);
+    })
+
+    it('retornar código de status 404',
+    async () => {
+        const response = await request(app).post('/:user/api/messages/sent');
+        expect(response.statusCode).toBe(404);
+    })
+})
