@@ -19,4 +19,16 @@ describe('Endpoint', () => {
         const response = await request(app).get('/teknos/api/folders');
         expect(response.statusCode).toBe(200);
     })
+
+    it('retornar código de status 404',
+    async () => {
+        const response = await request(app).get('/:user/api/folders');
+        expect(response.statusCode).toBe(404);
+    })
+
+    it('retornar código de status 404',
+    async () => {
+        const response = await request(app).get('/api/folders');
+        expect(response.statusCode).toBe(404);
+    })
 })

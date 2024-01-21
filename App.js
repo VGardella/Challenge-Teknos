@@ -16,13 +16,12 @@ app.get('/', (req, res) => {
 // Lectura de archivos:
 
 app.get('/:user/api/folders', (req, res) => {
-
     if (req.params.user !== 'teknos') {
-        res.status(404).send()
+        res.status(404).send('Usuario equivocado.')
     } else {
         fs.readFile('Modelos/folders.json', function(err, data) {
             if (err) {
-                return res.send('Error al abrir el archivo: nombre equivocado.');
+                return res.send('Error al abrir el archivo');
             }
             
             const newData = JSON.parse(data);
