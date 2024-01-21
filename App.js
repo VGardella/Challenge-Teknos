@@ -42,7 +42,6 @@ app.get('/:user/api/messages/:name', (req, res) => {
                 if (err) {
                     return res.send('Error al abrir el archivo: nombre equivocado.');
                 }
-    
                 const newData = JSON.parse(data);
                 res.send(newData.data);
             })
@@ -109,8 +108,17 @@ app.post('/:user/api/messages/:name', (req, res) => {
         res.status(404).send('Usuario equivocado.')
     } else {
         const file = req.params.name;
-        const route = 'Modelos/' + file + '.json'
+        const route = 'Modelos/' + file + '.json';
         const recivedData = req.body;
+        const requiredKeys = [ 'id', 'from', 'to', 'subject', 'message', 'time', 'read', 'starred', 'important', 'hasAttachments', 'labels'];
+
+        const newMessage = Object.assign({ id: Date.now() }, recivedData);
+
+        for (let i = 0; i < requiredKeys.length; i++) {
+            if (requiredKeys.sort()[i] !== Object.keys(newMessage).sort()[i]) {
+                res.send('Error al definir el mensaje: falta el campo ' + requiredKeys.sort()[i]);
+            }
+        }
     
         fs.readFile(route, (err, data) => {
             if (err) {
@@ -118,7 +126,7 @@ app.post('/:user/api/messages/:name', (req, res) => {
             }
     
             const entries = JSON.parse(data).data;
-            entries.push(recivedData);
+            entries.push(newMessage);
     
             fs.writeFile(route, JSON.stringify({ data: entries }, null, 2), (err) => {
                 if (err) {
