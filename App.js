@@ -9,9 +9,15 @@ app.listen(PORT, () => {
     console.log('Escuchando puerto:', PORT);
 })
 
+app.get('/', (req, res) => {
+    res.sendStatus(200);
+    console.log('Todo esta funcionando!');
+})
+
 // Lectura de archivos:
 
 app.get('/:user/api/folders', (req, res) => {
+
     if (req.params.user !== 'teknos') {
         res.send('Usuario equivocado.')
     } else {
@@ -159,3 +165,5 @@ app.delete('/:user/api/messages/:name/:id', (req, res) => {
         })
     }
 })
+
+module.exports = app;
