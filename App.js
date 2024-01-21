@@ -28,14 +28,13 @@ app.get('/:user/api/folders', (req, res) => {
             res.send(newData.data);
         })
     }
-
 })
 
 // Obtener mensajes:
 
 app.get('/:user/api/messages/:name', (req, res) => {
     if (req.params.user !== 'teknos') {
-        res.send('Usuario equivocado.')
+        res.status(404).send('Usuario equivocado.')
     } else {
         const file = req.params.name;
         if (Object.keys(req.query).length === 0) {
@@ -107,7 +106,7 @@ app.get('/:user/api/messages/:name', (req, res) => {
 
 app.post('/:user/api/messages/:name', (req, res) => {
     if (req.params.user !== 'teknos') {
-        res.send('Usuario equivocado.')
+        res.status(404).send('Usuario equivocado.')
     } else {
         const file = req.params.name;
         const route = 'Modelos/' + file + '.json'
@@ -136,7 +135,7 @@ app.post('/:user/api/messages/:name', (req, res) => {
 
 app.delete('/:user/api/messages/:name/:id', (req, res) => {
     if (req.params.user !== 'teknos') {
-        res.send('Usuario equivocado.')
+        res.status(404).send('Usuario equivocado.')
     } else {
         const file = req.params.name;
         const targetId = req.params.id;
