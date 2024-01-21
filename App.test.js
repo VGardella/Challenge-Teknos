@@ -10,3 +10,13 @@ describe('Endpoint', () => {
         expect(response.statusCode).toBe(200);
     })
 })
+
+// Lectura de archivos:
+
+describe('Endpoint', () => {
+    it('retornar código de status 200',
+    async () => {
+        const response = await request(app).get('/teknos/api/folders');
+        expect(response.statusCode).toBe(200);
+    })
+})
