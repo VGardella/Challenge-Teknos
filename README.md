@@ -8,10 +8,11 @@ Requerimientos:
 * Se necesita tener instalada la biblioteca express para poder correr la aplicación. En caso de no tenerlo instalado se tiene que correr en la terminal el comando:
 <code>npm install express</code>
 * Para poder testear APIs localmente se necesitará instalar el Desktop Agent de la plataforma Postman, disponible en https://www.postman.com/downloads/postman-agent/.
+* Para correr los test se necesita descargar las bibliotecas Jest y Supertest, las cuales se descaran usando los comandos <code>npm isntall jest</code> y <code>npm install supertest</code>.
 
 Funcionamiento:
 
-Se debe clonar el repositorio e instalar los componentes necesarios. Se podrá correr la aplicación al usar en la terminal el comando:
+Se debe clonar el repositorio e instalar los componentes indicados anteriormente. Se podrá correr la aplicación al usar en la terminal el comando:
 <code>node App.js</code>
 Si la aplicación se encuentra corriendo debidamente se recibirá el mensaje 'Escuchando puerto: 3000'. 
 
@@ -21,7 +22,7 @@ Para poder acceder a las funcionalidades de nuestra API tendremos que abrir el A
 * <b>Acceso a mensajes (Método GET):</b> localhost:3000/:user/api/messages/:name
 * <b>Filtrado de Mensajes (Método GET):</b> localhost:3000/:user/api/messages/:name?from=valor&to=valor&subject=valor
 * <b>Creación de mensajes (Método POST):</b> localhost:3000/:user/api/messages/:name
-  En este caso, se adjuntará el mensaje a publicar en la pestaña Body, en la cual podremos definir el formato.
+  En este caso, se adjuntará el mensaje a publicar en la pestaña Body. En cada mensaje se deberán definir los campos 'from', 'to', 'subject', 'message', 'time', 'read', 'starred', 'important', 'hasAttachments' y 'labels'. El campo 'id' se completa automaticamente.
 * <b>Borrado de mensajes (Método DELETE):</b> localhost:3000/:user/api/messages/:name/:id
   El parámetro 'id' corresponde al código de identificación provisto para cada mensaje.
 
